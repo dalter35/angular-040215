@@ -1,0 +1,22 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "David A. Alter - Angular App - 01# angular-040215",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dalter35/angular-040215.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dalter35/angular-040215/issues"
+  },
+  "homepage": "https://github.com/dalter35/angular-040215",
+  "dependencies": {
+    "express": "^4.12.3"
+  }
+}
