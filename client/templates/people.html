@@ -1,6 +1,6 @@
-<h2>People</h2>
+<h2>Total People : {{people.length}} </h2>
 <ul class='list-group'>
     <li class='list-group-item' ng-repeat='person in people'>
-        {{person.name + ' - ' + person._id}}
+        <a href='#/people/{{person._id}}'>{{person.name}}</a>
     </li>
 </ul>

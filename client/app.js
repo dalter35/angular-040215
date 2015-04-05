@@ -10,19 +10,40 @@ angular.module('app').config(function($routeProvider){
             controller: 'ThingsCtrl',
             templateUrl: '/templates/things.html'
         })
+        .when('/people/:id', {
+            controller: 'PersonCtrl',
+            templateUrl: '/templates/person.html'
+        })
         .otherwise({
             controller: 'HomeCtrl',
             templateUrl: '/templates/home.html'
         })
 });
 
+angular.module('app').factory('ThingSvc', function($http){
+    return{
+        getThings: function(){
+            return $http.get('/api/things');
+        }
+    }
+});
+
+angular.module('app').controller('ThingsCtrl', function($scope, ThingSvc){
+    ThingSvc.getThings().then(function(result){
+        $scope.things = result.data;
+    })
+});
+
 angular.module('app').factory('PeopleSvc', function($http){
     return{
         getPeople: function(){
             return $http.get('/api/people');
+        },
+        getPerson: function(id){
+            return $http.get('/api/people/' + id);
         }
-    }
-})
+    };
+});
 
 angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc){
     PeopleSvc.getPeople().then(function(result){
@@ -30,10 +51,13 @@ angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc){
     })
 });
 
+angular.module('app').controller('PersonCtrl', function($scope, $routeParams, PeopleSvc){
+    PeopleSvc.getPerson($routeParams.id).then(function(result){
+        $scope.person = result.data;
+    });
+});
+
 angular.module('app').controller('HomeCtrl', function($scope){
     $scope.message = 'hello from home tab';
 });
 
-angular.module('app').controller('ThingsCtrl', function($scope){
-    $scope.message = 'hello from things tab'
-})
