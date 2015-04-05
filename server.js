@@ -55,6 +55,12 @@ app.get("/api/things", function(req, res){
     })
 })
 
+app.get("/api/things/:id", function(req, res){
+    Thing.findById(req.params.id, function(err, result) {
+        res.send(result);
+    })
+})
+
 app.get("/api/people", function(req, res) {
     Person.find({}, function(err, results) {
         res.send(results);

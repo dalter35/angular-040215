@@ -10,6 +10,10 @@ angular.module('app').config(function($routeProvider){
             controller: 'ThingsCtrl',
             templateUrl: '/templates/things.html'
         })
+        .when('/things/:id', {
+            controller: 'ThingCtrl',
+            templateUrl: '/templates/thing.html'
+        })
         .when('/people/:id', {
             controller: 'PersonCtrl',
             templateUrl: '/templates/person.html'
@@ -24,6 +28,9 @@ angular.module('app').factory('ThingSvc', function($http){
     return{
         getThings: function(){
             return $http.get('/api/things');
+        },
+        getThing: function(id){
+            return $http.get('/api/things/' + id);
         }
     }
 });
@@ -31,6 +38,12 @@ angular.module('app').factory('ThingSvc', function($http){
 angular.module('app').controller('ThingsCtrl', function($scope, ThingSvc){
     ThingSvc.getThings().then(function(result){
         $scope.things = result.data;
+    })
+});
+
+angular.module('app').controller('ThingCtrl', function($scope, $routeParams, ThingSvc){
+    ThingSvc.getThing($routeParams.id).then(function(result){
+        $scope.thing = result.data;
     })
 });
 
