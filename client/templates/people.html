@@ -1,3 +1,6 @@
-<div class="well">
-    {{message}}
-</div>
+<h2>People</h2>
+<ul class='list-group'>
+    <li class='list-group-item' ng-repeat='person in people'>
+        {{person.name + ' - ' + person._id}}
+    </li>
+</ul>

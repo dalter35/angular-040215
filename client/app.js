@@ -16,8 +16,18 @@ angular.module('app').config(function($routeProvider){
         })
 });
 
-angular.module('app').controller('PeopleCtrl', function($scope){
-    $scope.message = 'hello from people tab';
+angular.module('app').factory('PeopleSvc', function($http){
+    return{
+        getPeople: function(){
+            return $http.get('/api/people');
+        }
+    }
+})
+
+angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc){
+    PeopleSvc.getPeople().then(function(result){
+        $scope.people = result.data;
+    })
 });
 
 angular.module('app').controller('HomeCtrl', function($scope){
