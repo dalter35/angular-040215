@@ -31,6 +31,9 @@ angular.module('app').factory('ThingSvc', function($http){
         },
         getThing: function(id){
             return $http.get('/api/things/' + id);
+        },
+        deleteThing: function(id){
+            return $http.delete("/api/things/" + id);
         }
     }
 });
@@ -38,7 +41,22 @@ angular.module('app').factory('ThingSvc', function($http){
 angular.module('app').controller('ThingsCtrl', function($scope, ThingSvc){
     ThingSvc.getThings().then(function(result){
         $scope.things = result.data;
-    })
+    });
+    
+    function activate(){
+        ThingSvc.getThings().then(function(things){
+            $scope.things = things.data;
+           console.log(things.data);
+        })
+    };
+    
+  //  activate();
+    
+    $scope.delete = function(thing){
+        ThingSvc.deleteThing(thing).then(function(){
+            activate();  
+           })
+        }
 });
 
 angular.module('app').controller('ThingCtrl', function($scope, $routeParams, ThingSvc){

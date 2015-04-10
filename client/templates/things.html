@@ -1,6 +1,15 @@
 <h2>Total Things : {{things.length}} </h2>
 <ul class='list-group'>
     <li class='list-group-item' ng-repeat='thing in things'>
-        <a href='#/things/{{thing._id}}'>{{thing.name}}</a>
+        <div class = 'row'>
+            <div class = 'col-md-10'>
+                <a href='#/things/{{thing._id}}'>{{thing.name}}</a>
+            </div>
+            <div class = 'col-md-2'>
+                <button class = 'btn btn-warning' ng-click='delete(thing._id)'>
+                    Delete
+                </button>
+            </div>
+        </div>    
     </li>
 </ul>

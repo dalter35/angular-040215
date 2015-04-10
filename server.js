@@ -1,7 +1,6 @@
 var express = require('express');
 var fs = require('fs');
 var mongoose = require('mongoose');
-//var describe = require('jasmine-node');
 
 var people = [{
     name: 'Dave'
@@ -9,8 +8,6 @@ var people = [{
     name: 'Brian'
 }, {
     name: 'Sean'
-},{
-    name: 'Dave'
 }];
 
 var personSchema = new mongoose.Schema({
@@ -124,15 +121,17 @@ var workoutSchema = new mongoose.Schema({
 var Workout = mongoose.model("Workout", workoutSchema);
 
 mongoose.connect('mongodb://localhost/my_app');
+
+var seededWorkouts, seededPeople;
+
 mongoose.connection.once('open', function(){
     // Person.find({}, function(err, peopleResults){
     //     if (peopleResults.length == 0)
     //         Person.create(people, function(err, singleplatformers){
     //             Thing.create(things, function(err, spirits){
-    //                 console.log(singleplatformers);
+    //              console.log(singleplatformers);
     //                 console.log(spirits);
     //             })
-                
     //         });
     //     });
     
@@ -142,7 +141,9 @@ mongoose.connection.once('open', function(){
               Thing.create(things, function(err, _things){
                 Person.create(people, function(err, _people){
                     Workout.create(workouts, function(err, _workouts) {
-                        console.log('connected');                        
+                        seededWorkouts = _workouts;
+                        seededPeople = _people;
+                        console.log('connected');
                         })
                     })
                 })
@@ -173,6 +174,12 @@ app.get("/api/things/:id", function(req, res){
     })
 })
 
+app.delete("/api/things/:id", function(req, res){
+    Thing.remove({_id: req.params.id}, function(){
+        res.send({});
+    })
+})
+
 app.get("/api/people", function(req, res) {
     Person.find({}, function(err, results) {
         res.send(results);
@@ -191,10 +198,11 @@ app.get("/", function(req, res){
     })
 })
 
-app.listen(process.env.PORT);
-
 module.exports = {
     Person: Person,
     Thing : Thing,
-    Workout : Workout
+    Workout : Workout,
 }
+
+app.listen(process.env.PORT);
+
