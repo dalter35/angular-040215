@@ -18,6 +18,14 @@ angular.module('app').config(function($routeProvider){
             controller: 'PersonCtrl',
             templateUrl: '/templates/person.html'
         })
+        .when('/workouts', {
+            controller: 'WorkoutsCtrl',
+            templateUrl: '/templates/workouts.html'
+        })
+        .when('/workouts/:id', {
+            controller: 'WorkoutCtrl',
+            templateUrl: '/templates/workout.html'
+        })
         .otherwise({
             controller: 'HomeCtrl',
             templateUrl: '/templates/home.html'
@@ -38,6 +46,30 @@ angular.module('app').factory('ThingSvc', function($http){
     }
 });
 
+
+angular.module('app').factory('WorkoutsSvc', function($http){
+    return{
+        getWorkouts: function(){
+            return $http.get('/api/workouts/');
+        },
+        getWorkout: function(id){
+            return $http.get('/api/workouts/' + id);
+        }
+    }
+})
+
+angular.module('app').controller('WorkoutsCtrl', function($scope, WorkoutsSvc){
+    WorkoutsSvc.getWorkouts().then(function(result){
+        $scope.workouts = result.data;
+    })
+})
+
+angular.module('app').controller('WorkoutCtrl', function($scope, $routeParams, WorkoutsSvc){
+    WorkoutsSvc.getWorkout($routeParams.id).then(function(result){
+        $scope.workout = result.data;
+    })
+})
+
 angular.module('app').controller('ThingsCtrl', function($scope, ThingSvc){
     ThingSvc.getThings().then(function(result){
         $scope.things = result.data;
@@ -46,15 +78,16 @@ angular.module('app').controller('ThingsCtrl', function($scope, ThingSvc){
     function activate(){
         ThingSvc.getThings().then(function(things){
             $scope.things = things.data;
-           console.log(things.data);
+            //console.log(things.data); //print remaining things to console
+            console.log('deleted thing');
         })
     };
     
-  //  activate();
+  //  activate(); dont need to initally call here since getThings was already called above
     
     $scope.delete = function(thing){
         ThingSvc.deleteThing(thing).then(function(){
-            activate();  
+            activate();  //return things that werent deleted
            })
         }
 });
@@ -72,14 +105,32 @@ angular.module('app').factory('PeopleSvc', function($http){
         },
         getPerson: function(id){
             return $http.get('/api/people/' + id);
+        },
+        deletePerson: function(id){
+            return $http.delete('/api/people/' + id);
         }
     };
 });
 
 angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc){
-    PeopleSvc.getPeople().then(function(result){
-        $scope.people = result.data;
-    })
+    // PeopleSvc.getPeople().then(function(result){
+    //     $scope.people = result.data;
+    // })
+    
+    function activate(){
+        PeopleSvc.getPeople().then(function(people){
+            $scope.people = people.data;
+        })
+    }
+    
+    activate();
+    
+    $scope.delete = function(person){
+        PeopleSvc.deletePerson(person).then(function(){
+            activate();
+            console.log('deleted person');
+        })
+    }
 });
 
 angular.module('app').controller('PersonCtrl', function($scope, $routeParams, PeopleSvc){

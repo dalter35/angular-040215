@@ -162,6 +162,12 @@ app.get("/api/workouts", function(req, res) {
     })
 })
 
+app.get("/api/workouts/:id", function(req, res){
+    Workout.findById(req.params.id, function(err, result){
+        res.send(result);
+    })
+})
+
 app.get("/api/things", function(req, res){
     Thing.find({}, function(err, results){
         res.send(results);
@@ -189,6 +195,12 @@ app.get("/api/people", function(req, res) {
 app.get("/api/people/:id", function(req, res){
     Person.findById(req.params.id, function(err, result){
         res.send(result);
+    })
+})
+
+app.delete("/api/people/:id", function(req, res){
+    Person.remove({_id: req.params.id}, function() {
+        res.send({});
     })
 })
 

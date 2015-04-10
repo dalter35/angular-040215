@@ -1,0 +1,15 @@
+<h2>Total Workouts : {{workouts.length}} </h2>
+<ul class = 'list-group'>
+    <li class = 'list-group-item' ng-repeat = 'workout in workouts'>
+        <div class = 'row'>
+            <div class= 'col-md-10'>
+                <a href='#/workouts/{{workout._id}}'>{{workout.name}}</a>
+            </div>
+            <!--<div class = 'col-md-2'>-->
+            <!--    <button class = 'btn btn-warning' ng-click='delete(workout._id)'>-->
+            <!--        Delete-->
+            <!--    </button>-->
+            <!--</div>-->
+        </div>
+    </li>
+</ul>
