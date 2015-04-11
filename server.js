@@ -2,66 +2,21 @@ var express = require('express');
 var fs = require('fs');
 var mongoose = require('mongoose');
 
+var personModel = require("./models/person")
+var workoutModel = require("./models/workout")
+var Person = personModel.Person;
+var Workout = workoutModel.Workout;
+
+
 var people = [{
     name: 'Dave'
 }, {
     name: 'Brian'
 }, {
     name: 'Sean'
-}];
-
-var personSchema = new mongoose.Schema({
-    name: String,
-    workoutCounter: {
-        type: Number,
-        default: 0
-    },
-    workoutsDone: [{
-        type: mongoose.Schema.ObjectId,
-        ref: "Workout"    
-    }]
-});
-
-var Person = mongoose.model('Person', personSchema);
-
-personSchema.statics.doWorkout = function(workoutId, personId, cb){
-    Workout.findOne({_id: workoutId}, function(err, _foundworkout){
-        var qry = {_id: personId};
-        var update = {$push: {workoutsDone: _foundworkout.name},
-            $inc: {workoutCounter: 1}
-        };
-        Person.update(qry, update, function(err, _msg1, _msg2){
-            Person.findOne({_id: personId}, function(err, _foundperson){
-                var qry2 = {_id: workoutId};
-                var update2 = {
-                    $push: {personRec: _foundperson.name},
-                    $inc: {workoutCounter: 1}    
-                };
-            })
-                Workout.update(qry2, update2, function(){
-                    cb();  
-            });
-        })    
-    });
-};
-
-
-
-var things = [{
-   name: 'Scotch' 
 }, {
-   name: 'Whiskey' 
-}, {
-   name: 'Bourbon' 
-},{
-   name: 'Water' 
+    name: 'Christine'
 }];
-
-var thingSchema = new mongoose.Schema({
-   name: String 
-});
-
-var Thing = mongoose.model('Thing', thingSchema);
 
 var workouts = [{
     name: 'Run',
@@ -105,52 +60,22 @@ var workouts = [{
     totalCount: 0
 }];
 
-var workoutSchema = new mongoose.Schema({
-    name: String,
-    date: String,
-    totalCount: {
-        type: Number,
-        default: 0
-    },
-    personRec: [{
-        type: mongoose.Schema.ObjectId,
-        ref: "Workout"
-    }]
-});
-
-var Workout = mongoose.model("Workout", workoutSchema);
-
 mongoose.connect('mongodb://localhost/my_app');
 
-var seededWorkouts, seededPeople;
-
 mongoose.connection.once('open', function(){
-    // Person.find({}, function(err, peopleResults){
-    //     if (peopleResults.length == 0)
-    //         Person.create(people, function(err, singleplatformers){
-    //             Thing.create(things, function(err, spirits){
-    //              console.log(singleplatformers);
-    //                 console.log(spirits);
-    //             })
-    //         });
-    //     });
-    
     Person.remove({}, function(){
-        Thing.remove({}, function(){
             Workout.remove({}, function(){
-              Thing.create(things, function(err, _things){
                 Person.create(people, function(err, _people){
                     Workout.create(workouts, function(err, _workouts) {
-                        seededWorkouts = _workouts;
-                        seededPeople = _people;
                         console.log('connected');
+                        
                         })
                     })
                 })
-            })        
-        })
     })
 });
+
+
 
 var app = express();
 
@@ -209,12 +134,6 @@ app.get("/", function(req, res){
          res.send(html);
     })
 })
-
-module.exports = {
-    Person: Person,
-    Thing : Thing,
-    Workout : Workout,
-}
 
 app.listen(process.env.PORT);
 
