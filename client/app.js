@@ -79,27 +79,37 @@ angular.module('app').factory('ThingSvc', function($http){
 });
 
 
-angular.module('app').factory('WorkoutsSvc', function($http){
+angular.module('app').factory('WorkoutsSvc', function($http, $q){
     return{
         getWorkouts: function(){
-            return $http.get('/api/workouts/');
+            // return $http.get('/api/workouts/');
+            var dfd = $q.defer();
+            $http.get('/api/workouts/').then(function(result){
+                dfd.resolve(result.data);
+            });
+            return dfd.promise;
         },
         getWorkout: function(id){
-            return $http.get('/api/workouts/' + id);
+            // return $http.get('/api/workouts/' + id);
+            var dfd = $q.defer();
+            $http.get('/api/workouts/' + id).then(function(result) {
+                dfd.resolve(result.data);
+            })
+            return dfd.promise;
         }
     }
 })
 
 angular.module('app').controller('WorkoutsCtrl', function($scope, WorkoutsSvc, NavSvc){
-    WorkoutsSvc.getWorkouts().then(function(result){
-        $scope.workouts = result.data;
+    WorkoutsSvc.getWorkouts().then(function(workouts){
+        $scope.workouts = workouts;
     });
     NavSvc.setTab("Workouts");
 })
 
 angular.module('app').controller('WorkoutCtrl', function($scope, $routeParams, WorkoutsSvc){
-    WorkoutsSvc.getWorkout($routeParams.id).then(function(result){
-        $scope.workout = result.data;
+    WorkoutsSvc.getWorkout($routeParams.id).then(function(workout){
+        $scope.workout = workout;
     })
 })
 
@@ -131,16 +141,31 @@ angular.module('app').controller('ThingCtrl', function($scope, $routeParams, Thi
     })
 });
 
-angular.module('app').factory('PeopleSvc', function($http){
+angular.module('app').factory('PeopleSvc', function($http, $q){
     return{
         getPeople: function(){
-            return $http.get('/api/people');
+            // return $http.get('/api/people');
+            var dfd = $q.defer();
+            $http.get('/api/people').then(function(result){
+                dfd.resolve(result.data);
+            })
+            return dfd.promise;
         },
         getPerson: function(id){
-            return $http.get('/api/people/' + id);
+            // return $http.get('/api/people/' + id);
+            var dfd = $q.defer();
+            $http.get('/api/people/' + id).then(function(result){
+                dfd.resolve(result.data);
+            })
+            return dfd.promise;
         },
         deletePerson: function(id){
-            return $http.delete('/api/people/' + id);
+            // return $http.delete('/api/people/' + id);
+            var dfd = $q.defer();
+            $http.delete('/api/people/' + id).then(function(result){
+                dfd.resolve(result.data);
+            })
+            return dfd.promise;
         }
     };
 });
@@ -152,7 +177,7 @@ angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc, NavSv
     
     function activate(){
         PeopleSvc.getPeople().then(function(people){
-            $scope.people = people.data;
+            $scope.people = people;
         })
     }
     
@@ -169,8 +194,8 @@ angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc, NavSv
 });
 
 angular.module('app').controller('PersonCtrl', function($scope, $routeParams, PeopleSvc){
-    PeopleSvc.getPerson($routeParams.id).then(function(result){
-        $scope.person = result.data;
+    PeopleSvc.getPerson($routeParams.id).then(function(person){
+        $scope.person = person;
     });
 });
 
