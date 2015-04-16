@@ -32,6 +32,38 @@ angular.module('app').config(function($routeProvider){
         })
 });
 
+angular.module('app').factory('NavSvc', function(){
+    var _tabs = [
+        {
+            title: "Home",
+            path:"#/"
+        },
+        {
+            title: "People",
+            path:"#/people"
+        },
+        {
+            title: "Workouts",
+            path:"#/workouts"
+        }
+    ];
+    return {
+        tabs: _tabs,
+        setTab: function(title){
+            _tabs.forEach(function(tab){
+                if (tab.title == title)
+                    tab.active =  true;
+                else
+                    tab.active = false;
+            });
+        }
+    }
+})
+
+angular.module('app').controller("NavCtrl", function($scope, NavSvc){
+    $scope.tabs = NavSvc.tabs;
+})
+
 angular.module('app').factory('ThingSvc', function($http){
     return{
         getThings: function(){
@@ -58,10 +90,11 @@ angular.module('app').factory('WorkoutsSvc', function($http){
     }
 })
 
-angular.module('app').controller('WorkoutsCtrl', function($scope, WorkoutsSvc){
+angular.module('app').controller('WorkoutsCtrl', function($scope, WorkoutsSvc, NavSvc){
     WorkoutsSvc.getWorkouts().then(function(result){
         $scope.workouts = result.data;
-    })
+    });
+    NavSvc.setTab("Workouts");
 })
 
 angular.module('app').controller('WorkoutCtrl', function($scope, $routeParams, WorkoutsSvc){
@@ -112,7 +145,7 @@ angular.module('app').factory('PeopleSvc', function($http){
     };
 });
 
-angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc){
+angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc, NavSvc){
     // PeopleSvc.getPeople().then(function(result){
     //     $scope.people = result.data;
     // })
@@ -131,6 +164,8 @@ angular.module('app').controller('PeopleCtrl', function($scope, PeopleSvc){
             console.log('deleted person');
         })
     }
+    
+    NavSvc.setTab("People");
 });
 
 angular.module('app').controller('PersonCtrl', function($scope, $routeParams, PeopleSvc){
@@ -139,7 +174,8 @@ angular.module('app').controller('PersonCtrl', function($scope, $routeParams, Pe
     });
 });
 
-angular.module('app').controller('HomeCtrl', function($scope){
+angular.module('app').controller('HomeCtrl', function($scope, NavSvc){
     $scope.message = 'hello from home tab';
+    NavSvc.setTab("Home");
 });
 

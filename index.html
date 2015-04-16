@@ -7,18 +7,9 @@
         <script src="/app.js"></script>
     </head>
     <body ng-app='app'>
-        <ul class="nav nav-tabs"/>
-            <li>
-                 <a href="#/">Home</a> 
-            </li>
-            <li>
-                 <a href="#/people">People</a> 
-            </li>
-            <li>
-                 <a href="#/things">Things</a>
-            </li>
-            <li>
-                 <a href="#/workouts">Workouts</a>
+        <ul class="nav nav-tabs" ng-controller="NavCtrl"/>
+            <li ng-repeat="tab in tabs" ng-class="{active: tab.active}">
+                 <a href="{{tab.path}}">{{tab.title}}</a> 
             </li>
         </ul>
         <div class="container">
